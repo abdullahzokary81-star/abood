@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دفعة تكنولوجيا المعلومات | كلية علوم القرآن الكريم</title>
+    <!-- خط تجوال من Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* الألوان والهوية البصرية */
+        :root {
+            --primary-teal: #0f766e;
+            --primary-dark: #042f2e;
+            --bg-body: #f0fdf4;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border-color: #e2e8f0;
+            --accent-gold: #d97706;
+            --avatar-bg: #e2e8f0;
+            --table-hover: #f8fafc;
+        }
+
+        body.dark-mode {
+            --primary-teal: #14b8a6;
+            --primary-dark: #022c22;
+            --bg-body: #0f172a;
+            --card-bg: #1e293b;
+            --text-dark: #f8fafc;
+            --text-muted: #cbd5e1;
+            --border-color: #334155;
+            --avatar-bg: #334155;
+            --table-hover: #334155;
+        }
+
+        /* منع الفيضان الأفقي */
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* الهيدر وشريط التنقل */
+        header {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 0.8rem 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border-bottom: 3px solid var(--accent-gold);
+            width: 100%;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .brand-logo-svg {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
+        }
+
+        .brand-text {
+            font-size: 1rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .brand-text span {
+            color: #5eead4;
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 0.3rem;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.4rem 0.7rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            display: block;
+        }
+
+        .nav-links a.active, .nav-links a:hover {
+            color: white;
+            background-color: var(--primary-teal);
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.35rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+
+        /* الحاوية الرئيسية */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            min-height: 70vh;
+            width: 100%;
+        }
+
+        /* التحكم في إظهار الأقسام */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+            font-size: 0.95rem;
+        }
+
+        /* البانر الرئيسي */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-teal));
+            color: white;
+            padding: 2.5rem 1.2rem;
+            border-radius: 18px;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+
+        .hero h2 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            color: #e2e8f0;
+        }
+
+        .hero-btn {
+            background-color: var(--accent-gold);
+            color: white;
+            padding: 0.75rem 1.6rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+        }
+
+        /* الميزات الكروت (قابلية النقر للجميع) */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .feature-card:hover, .feature-card:active {
+            transform: translateY(-4px);
+            border-color: var(--primary-teal);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .feature-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* شريط البحث */
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.85rem 1.2rem;
+            border-radius: 30px;
+            border: 2px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-teal);
+        }
+
+        /* شبكة الكروت (للطلاب والدكاترة) */
+        .students-grid, .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .student-card, .doctor-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .student-card::before, .doctor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--primary-teal);
+        }
+
+        .student-card.creator::before {
+            background: var(--accent-gold);
+        }
+
+        .student-avatar, .doctor-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--avatar-bg);
+            margin: 0 auto 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-muted);
+            border: 3px solid var(--primary-teal);
+        }
+
+        .doctor-avatar {
+            border-color: var(--accent-gold);
+        }
+
+        .student-name, .doctor-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.4rem;
+        }
+
+        .student-role, .doctor-subject {
+            display: inline-block;
+            font-size: 0.8rem;
+            background: rgba(15, 118, 110, 0.1);
+            color: var(--primary-teal);
+            padding: 0.25rem 0.7rem;
+            border-radius: 12px;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .doctor-subject {
+            background: rgba(217, 119, 6, 0.12);
+            color: var(--accent-gold);
+        }
+
+        .student-card.creator .student-role {
+            background: rgba(217, 119, 6, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .student-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            min-height: 15px;
+        }
+
+        /* تصميم الجدول الدراسي */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            min-width: 600px;
+        }
+
+        .schedule-table th, .schedule-table td {
+            padding: 1rem 0.8rem;
+            border: 1px solid var(--border-color);
+            font-size: 0.92rem;
+        }
+
+        .schedule-table th {
+            background-color: var(--primary-dark);
+            color: white;
+            font-weight: 700;
+        }
+
+        .schedule-table tr:hover {
+            background-color: var(--table-hover);
+        }
+
+        .day-cell {
+            background-color: rgba(15, 118, 110, 0.08);
+            font-weight: 800;
+            color: var(--primary-teal);
+            font-size: 1rem;
+        }
+
+        .time-badge {
+            display: inline-block;
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--accent-gold);
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-weight: 700;
+            direction: ltr;
+        }
+
+        /* قسم المطورين في أسفل الرئيسية */
+        .creators-section {
+            background: var(--card-bg);
+            padding: 2rem 1.2rem;
+            border-radius: 18px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            margin-top: 2.5rem;
+        }
+
+        .creators-title {
+            font-size: 1.2rem;
+            color: var(--primary-teal);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .creators-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .creator-tag {
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--text-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            border: 1.5px solid var(--accent-gold);
+        }
+
+        /* الفوتر */
+        footer {
+            background-color: var(--primary-dark);
+            color: #94a3b8;
+            text-align: center;
+            padding: 1.8rem 1rem;
+            margin-top: 3.5rem;
+            border-top: 3px solid var(--accent-gold);
+            font-size: 0.85rem;
+        }
+
+        /* تعديلات التجاوب مع الجوال */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .brand {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .nav-controls {
+                width: 100%;
+                justify-content: center;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-links {
+                justify-content: center;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .nav-links a {
+                padding: 0.35rem 0.55rem;
+                font-size: 0.82rem;
+            }
+
+            .hero h2 {
+                font-size: 1.4rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+            }
+
+            .students-grid, .doctors-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر وشريط التنقل -->
+    <header>
+        <nav>
+            <div class="brand" onclick="switchTab('home')">
+                <svg class="brand-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="48" fill="#ffffff" stroke="#0f766e" stroke-width="3"/>
+                    <circle cx="50" cy="50" r="43" fill="none" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 2"/>
+                    <path d="M 30 42 Q 50 35 50 48 Q 50 35 70 42 L 70 65 Q 50 58 50 70 Q 50 58 30 65 Z" fill="#0f766e"/>
+                    <path d="M 50 48 L 50 70" stroke="#d97706" stroke-width="2"/>
+                    <path d="M 50 20 A 7 7 0 1 0 50 32 A 5 5 0 1 1 50 20 Z" fill="#d97706"/>
+                </svg>
+
+                <div class="brand-text">
+                    دفعة تكنولوجيا المعلومات
+                    <span>كلية علوم القرآن الكريم والعلوم الإسلامية</span>
+                </div>
+            </div>
+
+            <div class="nav-controls">
+                <ul class="nav-links">
+                    <li><a id="nav-home" href="javascript:void(0)" class="active" onclick="switchTab('home')">الرئيسية</a></li>
+                    <li><a id="nav-students" href="javascript:void(0)" onclick="switchTab('students')">طلاب الدفعة</a></li>
+                    <li><a id="nav-doctors" href="javascript:void(0)" onclick="switchTab('doctors')">الكادر التدريسي</a></li>
+                    <li><a id="nav-schedule" href="javascript:void(0)" onclick="switchTab('schedule')">الجدول الدراسي</a></li>
+                </ul>
+                <button class="theme-toggle" id="themeBtn">
+                    <span id="themeIcon">🌙</span> <span id="themeText">الوضع الداكن</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="container">
+
+        <!-- 1️⃣ قسم الصفحة الرئيسية -->
+        <section id="sec-home" class="page-section active">
+            <div class="hero">
+                <h2>أهلاً بكم في المنصة الرسمية لدفعة IT</h2>
+                <p>الملتقى الرقمي الشامل لطلاب تكنولوجيا المعلومات بكلية علوم القرآن الكريم والعلوم الإسلامية</p>
+                <button class="hero-btn" onclick="switchTab('students')">استعرض طلاب الدفعة 🎓</button>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card" onclick="switchTab('students')">
+                    <div class="feature-icon">👨‍🎓</div>
+                    <div class="feature-title">دليل الطلاب</div>
+                    <div class="feature-desc">قائمة شاملة بالطلاب وتخصصاتهم التقنية وطرق التواصل.</div>
+                </div>
+                <div class="feature-card" onclick="switchTab('doctors')">
+                    <div class="feature-icon">👨‍🏫</div>
+                    <div class="feature-title">الكادر التدريسي</div>
+                    <div class="feature-desc">التعرف على أساتذة ودكاترة القسم والمواد التي يدرسونها.</div>
+                </div>
+                <div class="feature-card" onclick="switchTab('schedule')">
+                    <div class="feature-icon">📅</div>
+                    <div class="feature-title">الجدول الدراسي</div>
+                    <div class="feature-desc">متابعة جدول المحاضرات الأسبوعي ومواعيد القاعات.</div>
+                </div>
+            </div>
+
+            <!-- أسماء مطوري المشروع -->
+            <div class="creators-section">
+                <div class="creators-title">💻 تم تنفيذ وتطوير هذا الموقع بواسطة:</div>
+                <div class="creators-list">
+                    <div class="creator-tag">⭐ عبدالله عثمان</div>
+                    <div class="creator-tag">⭐ عيسى محمد علي</div>
+                    <div class="creator-tag">⭐ عمرو حسين صالح</div>
+                    <div class="creator-tag">⭐ مالك ماهر ابراهيم</div>
+                    <div class="creator-tag">⭐ علي عمر الكاف</div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 2️⃣ قسم طلاب الدفعة -->
+        <section id="sec-students" class="page-section">
+            <div class="page-header">
+                <h1>دليل طلاب الدفعة</h1>
+                <p>نخبة من طلاب تكنولوجيا المعلومات الشغوفين بالتقنية والتطوير</p>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 ابحث عن اسم طالب...">
+            </div>
+
+            <div class="students-grid">
+                <!-- ⭐ مطورو المشروع الخمسة -->
+                <div class="student-card creator">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">عبدالله عثمان</h3>
+                    <span class="student-role">⭐ مطور المشروع</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card creator">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">عيسى محمد علي</h3>
+                    <span class="student-role">⭐ مطور المشروع</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card creator">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">عمرو حسين صالح</h3>
+                    <span class="student-role">⭐ مطور المشروع</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card creator">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">مالك ماهر ابراهيم</h3>
+                    <span class="student-role">⭐ مطور المشروع</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card creator">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">علي عمر الكاف</h3>
+                    <span class="student-role">⭐ مطور المشروع</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <!-- 👤 باقي الطلاب -->
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">خلاد مجد هائل</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">عمرو حسين علي</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">محمد شعين</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">حمزه نجيب</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">محمد صابر انجاح</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">احمد حسن علي حسن</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">مروان عبده سعيد سنان</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">عبدالرزاق نبيل فرحان</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">منصور محمد سعيد</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">محمود نجيب</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+
+                <div class="student-card">
+                    <div class="student-avatar">👤</div>
+                    <h3 class="student-name">عبدالله ناصر عبدالعزيز</h3>
+                    <span class="student-role">طالب IT</span>
+                    <p class="student-desc"></p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 3️⃣ قسم الكادر التدريسي -->
+        <section id="sec-doctors" class="page-section">
+            <div class="page-header">
+                <h1>الكادر التدريسي</h1>
+                <p>أساتذة ودكاترة قسم تكنولوجيا المعلومات</p>
+            </div>
+
+            <div class="doctors-grid">
+                <div class="doctor-card">
+                    <div class="doctor-avatar">👤</div>
+                    <h3 class="doctor-name">د. فضل عبد العزيز</h3>
+                    <span class="doctor-subject">Computer Networks</span>
+                </div>
+
+                <div class="doctor-card">
+                    <div class="doctor-avatar">👤</div>
+                    <h3 class="doctor-name">د. عبد الرزاق علي</h3>
+                    <span class="doctor-subject">Digital Logic Design</span>
+                </div>
+
+                <div class="doctor-card">
+                    <div class="doctor-avatar">👤</div>
+                    <h3 class="doctor-name">د. عادل بسيم</h3>
+                    <span class="doctor-subject">Mathematics III</span>
+                </div>
+
+                <div class="doctor-card">
+                    <div class="doctor-avatar">👤</div>
+                    <h3 class="doctor-name">م. عبد الوهاب طيف</h3>
+                    <span class="doctor-subject">Information System Analysis & Design</span>
+                </div>
+
+                <div class="doctor-card">
+                    <div class="doctor-avatar">👤</div>
+                    <h3 class="doctor-name">م. سماح عبد الباسط</h3>
+                    <span class="doctor-subject">Web Design and Development I</span>
+                </div>
+
+                <div class="doctor-card">
+                    <div class="doctor-avatar">👤</div>
+                    <h3 class="doctor-name">الشيخ / أسامة عطا</h3>
+                    <span class="doctor-subject">Holy Quran 3</span>
+                </div>
+
+                <div class="doctor-card">
+                    <div class="doctor-avatar">👤</div>
+                    <h3 class="doctor-name">م. طارق عبدروس</h3>
+                    <span class="doctor-subject">Computer Networks (عملي)</span>
+                </div>
+
+                <div class="doctor-card">
+                    <div class="doctor-avatar">👤</div>
+                    <h3 class="doctor-name">م. فاتن الحكيمي</h3>
+                    <span class="doctor-subject">Object Oriented Programming</span>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 4️⃣ قسم الجدول الدراسي -->
+        <section id="sec-schedule" class="page-section">
+            <div class="page-header">
+                <h1>الجدول الدراسي</h1>
+                <p>جدول المحاضرات الأسبوعي المعتمد لدفعة تكنولوجيا المعلومات</p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>اليوم</th>
+                            <th>المادة</th>
+                            <th>المدرس</th>
+                            <th>الوقت</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- السبت -->
+                        <tr>
+                            <td rowspan="2" class="day-cell">السبت</td>
+                            <td>Computer Networks (نظري)</td>
+                            <td>د. فضل عبد العزيز</td>
+                            <td><span class="time-badge">8:00 – 9:30</span></td>
+                        </tr>
+                        <tr>
+                            <td>Digital Logic Design (نظري + سمنار)</td>
+                            <td>د. عبد الرزاق علي</td>
+                            <td><span class="time-badge">11:30 – 1:00</span></td>
+                        </tr>
+
+                        <!-- الإثنين -->
+                        <tr>
+                            <td rowspan="2" class="day-cell">الإثنين</td>
+                            <td>Mathematics III (نظري + سمنار)</td>
+                            <td>د. عادل بسيم</td>
+                            <td><span class="time-badge">8:00 – 9:30</span></td>
+                        </tr>
+                        <tr>
+                            <td>Information System Analysis & Design (نظري + سمنار)</td>
+                            <td>م. عبد الوهاب طيف</td>
+                            <td><span class="time-badge">11:30 – 1:00</span></td>
+                        </tr>
+
+                        <!-- الثلاثاء -->
+                        <tr>
+                            <td rowspan="3" class="day-cell">الثلاثاء</td>
+                            <td>Web Design and Development I (نظري)</td>
+                            <td>م. سماح عبد الباسط</td>
+                            <td><span class="time-badge">8:00 – 9:30</span></td>
+                        </tr>
+                        <tr>
+                            <td>Web Design and Development I (عملي)</td>
+                            <td>م. سماح عبد الباسط</td>
+                            <td><span class="time-badge">10:00 – 11:30</span></td>
+                        </tr>
+                        <tr>
+                            <td>Holy Quran 3</td>
+                            <td>الشيخ / أسامة عطا</td>
+                            <td><span class="time-badge">11:30 – 1:00</span></td>
+                        </tr>
+
+                        <!-- الأربعاء -->
+                        <tr>
+                            <td rowspan="3" class="day-cell">الأربعاء</td>
+                            <td>Computer Networks (عملي)</td>
+                            <td>م. طارق عبدروس</td>
+                            <td><span class="time-badge">8:00 – 9:30</span></td>
+                        </tr>
+                        <tr>
+                            <td>Object Oriented Programming (نظري)</td>
+                            <td>م. فاتن الحكيمي</td>
+                            <td><span class="time-badge">10:00 – 11:30</span></td>
+                        </tr>
+                        <tr>
+                            <td>Object Oriented Programming (عملي)</td>
+                            <td>م. فاتن الحكيمي</td>
+                            <td><span class="time-badge">11:30 – 1:00</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- الفوتر -->
+    <footer>
+        <p>جميع الحقوق محفوظة © 2026 - دفعة تكنولوجيا المعلومات | كلية علوم القرآن الكريم والعلوم الإسلامية</p>
+    </footer>
+
+    <!-- JavaScript التفاعلي -->
+    <script>
+        function switchTab(tabId) {
+            // إخفاء جميع الأقسام
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // إزالة حالة التفعيل من جميع روابط الهيدر
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(a => a.classList.remove('active'));
+
+            // إظهار القسم المطلوب وتفعيل الزر الخاص به
+            const targetSec = document.getElementById('sec-' + tabId);
+            if (targetSec) {
+                targetSec.classList.add('active');
+            }
+
+            const targetNav = document.getElementById('nav-' + tabId);
+            if (targetNav) {
+                targetNav.classList.add('active');
+            }
+
+            // الصعود إلى أعلى الصفحة عند الانتقال
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // إدارة الوضع الداكن
+        const themeBtn = document.getElementById('themeBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeIcon.textContent = '☀️';
+            themeText.textContent = 'الوضع الفاتح';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'الوضع الفاتح';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'الوضع الداكن';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // شريط البحث المباشر في دليل الطلاب
+        const searchInput = document.getElementById('searchInput');
+        const studentCards = document.querySelectorAll('.student-card');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            studentCards.forEach(card => {
+                const name = card.querySelector('.student-name').textContent.toLowerCase();
+                if (name.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
